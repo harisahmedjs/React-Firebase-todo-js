@@ -2,6 +2,9 @@ import React, { useRef } from 'react'
 import { TextField } from '@mui/material';
 import { Button } from '@mui/material';
 import { Box } from '@mui/system';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../../config/firebase/firebase';
+
 
 const Register = () => {
    //getting value
@@ -9,15 +12,26 @@ const Register = () => {
    const password = useRef()
 
 
-
    //login
    const register = (event) =>{
 
      event.preventDefault();
-     console.log('register clicked clicked');
-     console.log(email.current.value);
-     console.log(password.current.value);
-     email.current.value = ''
+     createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
+     .then((userCredential) => {
+       
+       const user = userCredential.user;
+       console.log(user);
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        console.log(errorMessage);
+        
+      });
+      console.log('register clicked clicked');
+      console.log(email.current.value);
+      console.log(password.current.value);
+      
+  email.current.value = ''
      password.current.value = ''
    }
 

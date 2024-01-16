@@ -2,9 +2,14 @@ import React, { useRef } from 'react'
 import { TextField } from '@mui/material';
 import { Button } from '@mui/material';
 import { Box } from '@mui/system';
+import {  signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../../config/firebase/firebase';
+import { useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
+
+const navigate = useNavigate()
 
   //getting value
   const email = useRef()
@@ -12,11 +17,20 @@ const Login = () => {
   //login
   const login = (event) =>{
     event.preventDefault();
-    console.log('login clicked');
-    console.log(email.current.value);
-    console.log(password.current.value);
+
+    signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      console.log(user);
+   navigate('/')
+    })
+    .catch((error) => {
+      const errorMessage = error.message;
+      console.log(errorMessage);
+    });
     email.current.value = ''
     password.current.value = ''
+
   }
 return (
     <Box sx={{height : '80vh'}} className='d-flex justify-content-center align-item-center'>
